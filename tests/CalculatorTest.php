@@ -1,7 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Twigeval\Calculator;
+use KhanhIceTea\Twigeval\Calculator;
 
 class CalculatorTest extends TestCase {
     private $calculator;

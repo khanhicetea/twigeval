@@ -1,5 +1,5 @@
 <?php
-namespace Twigeval;
+namespace KhanhIceTea\Twigeval;
 
 use Twig_Environment;
 use Twig_Loader_Array;
