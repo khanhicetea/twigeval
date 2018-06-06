@@ -9,15 +9,17 @@ class Calculator {
     private $twig;
     private $cacthException;
 
-    public function __construct(Twig_Environment $twig = null, $cacthException = true, array $options = [])
+    // Be carefully !!! eval function will be runned if $cacheDir equals false
+    public function __construct($cacheDir = null, $cacthException = true, array $twigOptions = [])
     {
         $this->cacthException = $cacthException;
-        $options = array_merge(array(
-            'strict_variables' => true,
-            'cache' => false,
-        ), $options);
 
-        $this->twig = $twig ?: new Twig_Environment(new Twig_Loader_Array(), $options);
+        $twigOptions = array_merge(array(
+            'strict_variables' => true,
+            'cache' => is_null($cacheDir) ? sys_get_temp_dir() : $cacheDir,
+        ), $twigOptions);
+
+        $this->twig = new Twig_Environment(new Twig_Loader_Array(), $twigOptions);
     }
 
     public function renderFromString(string $template, array $variables = []) {
