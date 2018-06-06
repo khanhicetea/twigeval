@@ -40,9 +40,9 @@ class CalculatorTest extends TestCase {
 
     public function testStringVariables() {
         $exp = "{{ name|reverse }}@{{ domain|upper }}";
-        $result = $this->calculator->calculate($exp, ['name' => 'hello', 'domain' => 'google.com']);
+        $result = $this->calculator->calculate($exp, ['name' => 'hello', 'domain' => 'GMAIL.com']);
 
-        $this->assertEquals($result, "olleh@GOOGLE.COM");
+        $this->assertEquals($result, "olleh@GMAIL.COM");
     }
 
     public function testBooleanVariables() {
@@ -65,5 +65,31 @@ class CalculatorTest extends TestCase {
 
         $this->assertEquals($result1, 35);
         $this->assertEquals($result2, 46.708);
+    }
+
+    public function testExceptionCatchVariables() {
+        $exp1 = "a * 3 + b / 5";
+        $result1 = $this->calculator->number($exp1, ['a' => 9, 'd' => 40]);
+
+        $exp2 = "(a and b) or c";
+        $result2 = $this->calculator->isFalse($exp2, ['a' => false, 'b' => false, 'd' => false]);
+
+        $this->assertEquals($result1, null);
+        $this->assertEquals($result2, null);
+    }
+
+    public function testNonStrictVariables() {
+        $calculator = new Calculator(null, true, [
+            'strict_variables' => false,
+        ]);
+
+        $exp1 = "a * 3 + b / 5";
+        $result1 = $calculator->number($exp1, ['a' => 9, 'd' => 40]);
+
+        $exp2 = "(a and b) or c";
+        $result2 = $calculator->isFalse($exp2, ['a' => false, 'b' => false, 'd' => false]);
+
+        $this->assertEquals($result1, 27.0);
+        $this->assertEquals($result2, true);
     }
 }
