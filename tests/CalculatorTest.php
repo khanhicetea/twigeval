@@ -3,49 +3,57 @@
 use PHPUnit\Framework\TestCase;
 use KhanhIceTea\Twigeval\Calculator;
 
-class CalculatorTest extends TestCase {
+class CalculatorTest extends TestCase
+{
     private $calculator;
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->calculator = new Calculator();
     }
     
-    public function testMath() {
+    public function testMath()
+    {
         $exp = "{{ (14 + 7 * 8) ** (49 / 7 - 5)  }}";
         $result = $this->calculator->calculate($exp);
 
         $this->assertEquals($result, "4900");
     }
 
-    public function testMathWithoutBrackets() {
+    public function testMathWithoutBrackets()
+    {
         $exp = "(12 + 58) * (49 / 7 - 5)";
         $result = $this->calculator->calculate($exp);
 
         $this->assertEquals($result, "140");
     }
 
-    public function testMathVariables() {
+    public function testMathVariables()
+    {
         $exp = "{{ a * 3 + b / 5 }}";
         $result = $this->calculator->calculate($exp, ['a' => 9, 'b' => 40]);
 
         $this->assertEquals($result, "35");
     }
 
-    public function testMathVariablesWithoutBrackets() {
+    public function testMathVariablesWithoutBrackets()
+    {
         $exp = "a * 3 + b / 5";
         $result = $this->calculator->calculate($exp, ['a' => 9, 'b' => 40]);
 
         $this->assertEquals($result, "35");
     }
 
-    public function testStringVariables() {
+    public function testStringVariables()
+    {
         $exp = "{{ name|reverse }}@{{ domain|upper }}";
         $result = $this->calculator->calculate($exp, ['name' => 'hello', 'domain' => 'GMAIL.com']);
 
         $this->assertEquals($result, "olleh@GMAIL.COM");
     }
 
-    public function testBooleanVariables() {
+    public function testBooleanVariables()
+    {
         $exp1 = "(a or b) and c";
         $result1 = $this->calculator->isTrue($exp1, ['a' => true, 'b' => false, 'c' => true]);
 
@@ -56,7 +64,8 @@ class CalculatorTest extends TestCase {
         $this->assertEquals($result2, true);
     }
 
-    public function testNumberVariables() {
+    public function testNumberVariables()
+    {
         $exp1 = "a * 3 + b / 5";
         $result1 = $this->calculator->number($exp1, ['a' => 9, 'b' => 40]);
 
@@ -67,7 +76,8 @@ class CalculatorTest extends TestCase {
         $this->assertEquals($result2, 46.708);
     }
 
-    public function testExceptionCatchVariables() {
+    public function testExceptionCatchVariables()
+    {
         $exp1 = "a * 3 + b / 5";
         $result1 = $this->calculator->number($exp1, ['a' => 9, 'd' => 40]);
 
@@ -78,7 +88,8 @@ class CalculatorTest extends TestCase {
         $this->assertEquals($result2, null);
     }
 
-    public function testNonStrictVariables() {
+    public function testNonStrictVariables()
+    {
         $calculator = new Calculator(null, true, [
             'strict_variables' => false,
         ]);
