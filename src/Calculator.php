@@ -43,7 +43,7 @@ class Calculator
     {
         $expression = trim($expression);
 
-        if (substr($expression, 0, 2) != "{{" && substr($expression, -2) != "}}") {
+        if (substr($expression, 0, 1) != "{" && substr($expression, -1) != "}") {
             $expression = '{{ '.$expression.' }}';
         }
 
