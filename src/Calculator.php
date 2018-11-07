@@ -3,6 +3,8 @@ namespace KhanhIceTea\Twigeval;
 
 use Twig_Environment;
 use Twig_Loader_Array;
+use Twig_Source;
+use Twig_Error_Syntax;
 use Exception;
 
 class Calculator
@@ -70,5 +72,18 @@ class Calculator
         $isTrue = $this->isTrue($expression, $variables);
 
         return is_null($isTrue) ? null : !$isTrue;
+    }
+
+    public function validate($expression)
+    {
+        try {
+            $source = new Twig_Source($expression, null);
+            $twig = $this->twig;
+            $twig->parse($twig->tokenize($source));
+            return true;
+        } catch (Twig_Error_Syntax $e) {
+        } catch (Exception $e) {
+        }
+        return false;
     }
 }
