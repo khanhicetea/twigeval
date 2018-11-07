@@ -46,6 +46,7 @@ class Calculator
         if (substr($expression, 0, 1) != "{" && substr($expression, -1) != "}") {
             $expression = '{{ '.$expression.' }}';
         }
+
         return $expression;
     }
 
@@ -81,8 +82,7 @@ class Calculator
     public function validate(string $expression)
     {
         try {
-            $expression = $this->normalizeExpression($expression);
-            $source = new Twig_Source($expression, null);
+            $source = new Twig_Source($this->normalizeExpression($expression), null);
             $this->twig->parse($this->twig->tokenize($source));
         } catch (Exception $e) {
             return false;
