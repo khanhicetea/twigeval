@@ -52,9 +52,7 @@ class Calculator
 
     public function calculate(string $expression, array $variables = [])
     {
-        $expression = $this->normalizeExpression($expression);
-
-        return $this->renderFromString($expression, $variables);
+        return $this->renderFromString($this->normalizeExpression($expression), $variables);
     }
 
     public function number(string $expression, array $variables = [])

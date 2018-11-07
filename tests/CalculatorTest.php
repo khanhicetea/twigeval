@@ -112,7 +112,15 @@ class CalculatorTest extends TestCase
         $exp2 = "a == b";
         $result2 = $this->calculator->validate($exp2);
 
+        $exp3 = "{{ a === b }}";
+        $result3 = $this->calculator->validate($exp3);
+
+        $exp4 = "{{ a == b }}";
+        $result4 = $this->calculator->validate($exp4);
+
         $this->assertEquals($result1, false);
         $this->assertEquals($result2, true);
+        $this->assertEquals($result3, false);
+        $this->assertEquals($result4, true);
     }
 }
