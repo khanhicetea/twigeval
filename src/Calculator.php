@@ -3,6 +3,7 @@ namespace KhanhIceTea\Twigeval;
 
 use Twig_Environment;
 use Twig_Loader_Array;
+use Twig_Source;
 use Exception;
 
 class Calculator
@@ -39,15 +40,19 @@ class Calculator
         }
     }
 
-    public function calculate(string $expression, array $variables = [])
+    protected function normalizeExpression(string $expression)
     {
         $expression = trim($expression);
-
         if (substr($expression, 0, 1) != "{" && substr($expression, -1) != "}") {
             $expression = '{{ '.$expression.' }}';
         }
 
-        return $this->renderFromString($expression, $variables);
+        return $expression;
+    }
+
+    public function calculate(string $expression, array $variables = [])
+    {
+        return $this->renderFromString($this->normalizeExpression($expression), $variables);
     }
 
     public function number(string $expression, array $variables = [])
@@ -70,5 +75,16 @@ class Calculator
         $isTrue = $this->isTrue($expression, $variables);
 
         return is_null($isTrue) ? null : !$isTrue;
+    }
+
+    public function validate(string $expression)
+    {
+        try {
+            $source = new Twig_Source($this->normalizeExpression($expression), null);
+            $this->twig->parse($this->twig->tokenize($source));
+        } catch (Exception $e) {
+            return false;
+        }
+        return true;
     }
 }
