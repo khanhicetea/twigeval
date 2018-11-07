@@ -40,13 +40,18 @@ class Calculator
         }
     }
 
-    public function calculate(string $expression, array $variables = [])
+    protected function normalizeExpression(string $expression)
     {
         $expression = trim($expression);
-
         if (substr($expression, 0, 1) != "{" && substr($expression, -1) != "}") {
             $expression = '{{ '.$expression.' }}';
         }
+        return $expression;
+    }
+
+    public function calculate(string $expression, array $variables = [])
+    {
+        $expression = $this->normalizeExpression($expression);
 
         return $this->renderFromString($expression, $variables);
     }
@@ -73,9 +78,10 @@ class Calculator
         return is_null($isTrue) ? null : !$isTrue;
     }
 
-    public function validate($expression)
+    public function validate(string $expression)
     {
         try {
+            $expression = $this->normalizeExpression($expression);
             $source = new Twig_Source($expression, null);
             $this->twig->parse($this->twig->tokenize($source));
         } catch (Exception $e) {
