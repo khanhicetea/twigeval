@@ -4,7 +4,6 @@ namespace KhanhIceTea\Twigeval;
 use Twig_Environment;
 use Twig_Loader_Array;
 use Twig_Source;
-use Twig_Error_Syntax;
 use Exception;
 
 class Calculator
@@ -78,12 +77,10 @@ class Calculator
     {
         try {
             $source = new Twig_Source($expression, null);
-            $twig = $this->twig;
-            $twig->parse($twig->tokenize($source));
-            return true;
-        } catch (Twig_Error_Syntax $e) {
+            $this->twig->parse($this->twig->tokenize($source));
         } catch (Exception $e) {
+            return false;
         }
-        return false;
+        return true;
     }
 }
