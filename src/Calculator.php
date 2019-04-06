@@ -80,7 +80,8 @@ class Calculator
     public function validate(string $expression)
     {
         try {
-            $source = new Twig_Source($this->normalizeExpression($expression), null);
+            $code = $this->normalizeExpression($expression);
+            $source = new Twig_Source($code, md5($code));
             $this->twig->parse($this->twig->tokenize($source));
         } catch (Exception $e) {
             return false;
