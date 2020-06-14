@@ -1,10 +1,10 @@
 <?php
 namespace KhanhIceTea\Twigeval;
 
-use Twig_Environment;
-use Twig_Loader_Array;
-use Twig_Source;
 use Exception;
+use Twig\Environment;
+use Twig\Loader\ArrayLoader;
+use Twig\Source;
 
 class Calculator
 {
@@ -21,7 +21,7 @@ class Calculator
             'cache' => is_null($cacheDir) ? sys_get_temp_dir() : $cacheDir,
         ), $twigOptions);
 
-        $this->twig = new Twig_Environment(new Twig_Loader_Array(), $twigOptions);
+        $this->twig = new Environment(new ArrayLoader(), $twigOptions);
     }
 
     public function renderFromString(string $template, array $variables = [])
@@ -31,7 +31,7 @@ class Calculator
         $this->twig->getLoader()->setTemplate($name, $template);
 
         try {
-            return $this->twig->loadTemplate($name)->render($variables);
+            return $this->twig->loadTemplate($this->twig->getTemplateClass($name), $name)->render($variables);
         } catch (Exception $e) {
             if ($this->cacthException) {
                 return null;
@@ -81,7 +81,7 @@ class Calculator
     {
         try {
             $code = $this->normalizeExpression($expression);
-            $source = new Twig_Source($code, md5($code));
+            $source = new Source($code, md5($code));
             $this->twig->parse($this->twig->tokenize($source));
         } catch (Exception $e) {
             return false;
